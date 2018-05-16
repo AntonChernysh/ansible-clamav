@@ -9,9 +9,9 @@ Ansible 2.0+ and Python.
 Use in playbook
 ------------
 ```- name: Playbook for clamav installation</br>
-  hosts: someserver</br>
-  roles:<br>
-      - ansible-clamav</br>
+  hosts: someserver
+  roles:
+      - ansible-clamav
 ```
 Author Information
 ------------------
