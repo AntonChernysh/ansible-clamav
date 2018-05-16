@@ -1,0 +1,87 @@
+---
+- name: Install clamv packages
+  yum:
+    name: 
+      - clamav-server
+      - clamav-data
+      - clamav-update
+      - clamav-filesystem
+      - clamav
+      - clamav-scanner-systemd
+      - clamav-devel
+      - clamav-lib
+      - clamav-server-systemd
+    state: present
+
+- name: Modify SELINUX to allow clamav
+  shell: setsebool -P antivirus_can_scan_system 1 && setsebool -P clamd_use_jit 1
+
+- name: Remove default clamav services
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /usr/lib/systemd/system/clamd@.service
+    - /usr/lib/systemd/system/clamd@scan.service
+
+- name: Copy clamav conf file to target server
+  template:
+    src: "clamd.conf"
+    dest: "/etc/clamd.d/clamd.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy freshclam conf file to target server
+  template:
+    src: "freshclam.conf"
+    dest: "/etc/freshclam.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy freshclam service file to target server
+  template:
+    src: "clam-freshclam.service"
+    dest: "/usr/lib/systemd/system/clam-freshclam.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable clam-freshclam service
+  systemd:
+    daemon_reload: yes
+    name: clam-freshclam
+    enabled: yes
+    state: started
+
+- name: Copy clamd service file to target server
+  template:
+    src: "clamd.service"
+    dest: "/usr/lib/systemd/system/clamd.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy clamd@scan service file to target server
+  template:
+    src: "clamd@scan.service"
+    dest: "/usr/lib/systemd/system/clamd@scan.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable clamd service
+  systemd:
+    daemon_reload: yes
+    name: clamd
+    enabled: yes
+    state: started
+
+- name: Start and enable clamd@scan service
+  systemd:
+    daemon_reload: yes
+    name: clamd@scan
+    enabled: yes
+    state: started
+
