@@ -11,8 +11,8 @@ Use in playbook
 ```- name: Playbook for clamav installation</br>
   hosts: someserver</br>
   roles:<br>
-      - ansible-clamav```</br>
-
+      - ansible-clamav</br>
+```
 Author Information
 ------------------
 Anton Chernysh. AntonChernysh@gmail.com
