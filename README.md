@@ -4,7 +4,7 @@ This role installs clamav on Centos (tested on Centos 7)
 
 Requirements
 ------------
-ANsible 2.0+ and Python.
+Ansible 2.0+ and Python.
 
 Use in playbook
 ------------
